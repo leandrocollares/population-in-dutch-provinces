@@ -1,45 +1,134 @@
 <script>
-  import svelteLogo from './assets/svelte.svg'
-  import Counter from './lib/Counter.svelte'
+  import * as d3 from 'd3';
+  import BarChart from './lib/BarChart.svelte';
+
+  let populationData, sortedData;
+
+  d3.csv('/data/populationInProvinces.csv').then(data => {
+    populationData = data;
+    sortedData = populationData.sort(
+      (a, b) => a['population'] - b['population'],
+    );
+  });
 </script>
 
 <main>
-  <div>
-    <a href="https://vitejs.dev" target="_blank" rel="noreferrer"> 
-      <img src="/vite.svg" class="logo" alt="Vite Logo" />
-    </a>
-    <a href="https://svelte.dev" target="_blank" rel="noreferrer"> 
-      <img src={svelteLogo} class="logo svelte" alt="Svelte Logo" />
-    </a>
+  <div class="app">
+    <div class="text">
+      <h1>Dutch provinces by population (September, 2022)</h1>
+    </div>
+    {#if sortedData}
+      <BarChart data={sortedData} />
+    {/if}
+
+    <div class="text">
+      <p>
+        Developed by
+        <a
+          href="https://leandrocollares.netlify.app"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Leandro Collares
+        </a>
+        &middot; Source:
+        <a
+          href="https://opendata.cbs.nl/statline/#/CBS/nl/dataset/71488ned/table?dl=6DEE4"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Centraal Bureau voor de Statistiek
+        </a>
+      </p>
+    </div>
   </div>
-  <h1>Vite + Svelte</h1>
-
-  <div class="card">
-    <Counter />
-  </div>
-
-  <p>
-    Check out <a href="https://github.com/sveltejs/kit#readme" target="_blank" rel="noreferrer">SvelteKit</a>, the official Svelte app framework powered by Vite!
-  </p>
-
-  <p class="read-the-docs">
-    Click on the Vite and Svelte logos to learn more
-  </p>
 </main>
 
 <style>
-  .logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
+  @font-face {
+    font-family: 'Merriweather';
+    font-style: normal;
+    font-weight: 700;
+    src: url('../fonts/merriweather-v30-latin-700.eot'); /* IE9 Compat Modes */
+    src: local(''),
+      url('../fonts/merriweather-v30-latin-700.eot?#iefix')
+        format('embedded-opentype'),
+      /* IE6-IE8 */ url('../fonts/merriweather-v30-latin-700.woff2')
+        format('woff2'),
+      /* Super Modern Browsers */
+        url('../fonts/merriweather-v30-latin-700.woff') format('woff'),
+      /* Modern Browsers */ url('../fonts/merriweather-v30-latin-700.ttf')
+        format('truetype'),
+      /* Safari, Android, iOS */
+        url('../fonts/merriweather-v30-latin-700.svg#Merriweather')
+        format('svg'); /* Legacy iOS */
   }
-  .logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
+
+  @font-face {
+    font-family: 'Source Sans Pro';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/source-sans-pro-v21-latin-regular.eot'); /* IE9 Compat Modes */
+    src: local(''),
+      url('../fonts/source-sans-pro-v21-latin-regular.eot?#iefix')
+        format('embedded-opentype'),
+      /* IE6-IE8 */ url('../fonts/source-sans-pro-v21-latin-regular.woff2')
+        format('woff2'),
+      /* Super Modern Browsers */
+        url('../fonts/source-sans-pro-v21-latin-regular.woff') format('woff'),
+      /* Modern Browsers */
+        url('../fonts/source-sans-pro-v21-latin-regular.ttf') format('truetype'),
+      /* Safari, Android, iOS */
+        url('../fonts/source-sans-pro-v21-latin-regular.svg#SourceSansPro')
+        format('svg'); /* Legacy iOS */
   }
-  .logo.svelte:hover {
-    filter: drop-shadow(0 0 2em #ff3e00aa);
+
+  :root {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    color: #282828;
+    background: #ffffff;
+    margin: 0 15px;
   }
-  .read-the-docs {
-    color: #888;
+
+  .app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    user-select: none;
+  }
+
+  .text {
+    width: 100%;
+    max-width: 700px;
+    margin-top: 20px;
+  }
+
+  h1 {
+    font-family: 'Merriweather', serif;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 28px;
+  }
+
+  a {
+    color: #ff4941;
+    text-underline-offset: 0.2em;
+  }
+
+  a:visited {
+    color: #ff4941;
+  }
+
+  a:active {
+    color: #ff4941;
+  }
+
+  a:hover {
+    color: #1313db;
   }
 </style>
